@@ -1,4 +1,4 @@
-package btc
+package rune
 
 import (
 	"encoding/json"
@@ -15,50 +15,50 @@ const (
 	UrlTestnet = "https://ord.bevm.io/testnet"
 )
 
-type RunesApi struct {
+type Api struct {
 	Url string
 }
 
-func NewRunesApi(url string) *RunesApi {
+func NewRunesApi(url string) *Api {
 	if !strings.HasSuffix(url, "/") {
 		url = url + "/"
 	}
-	return &RunesApi{Url: url}
+	return &Api{Url: url}
 }
 
-func (c *RunesApi) TransferRunes() (*base.OptionalString, error) {
+func (c *Api) TransferRunes() (*base.OptionalString, error) {
 	return base.NewOptionalString(""), nil
 }
 
-func (c *RunesApi) RunesBalance(owner, rune string) (*RuneBalance, error) {
+func (c *Api) RunesBalance(owner, rune string) (*Balance, error) {
 	path := fmt.Sprintf("RuneBalance/%v/%v", owner, rune)
-	var out RuneBalance
+	var out Balance
 	err := c.doRequest(http.MethodGet, path, nil, &out)
 	return &out, err
 }
 
-func (c *RunesApi) RunesBalances(owner string) (*RuneBalanceArray, error) {
+func (c *Api) RunesBalances(owner string) (*BalanceArray, error) {
 	path := fmt.Sprintf("RuneBalances/%v", owner)
-	var out RuneBalanceArray
+	var out BalanceArray
 	err := c.doRequest(http.MethodGet, path, nil, &out)
 	return &out, err
 }
 
-func (c *RunesApi) RuneInfo(name string) (*RuneInfo, error) {
+func (c *Api) RuneInfo(name string) (*Info, error) {
 	path := fmt.Sprintf("RuneInfo/%v", name)
-	var out RuneInfo
+	var out Info
 	err := c.doRequest(http.MethodGet, path, nil, &out)
 	return &out, err
 }
 
-func (c *RunesApi) RuneInfoById(id string) (*RuneInfo, error) {
+func (c *Api) RuneInfoById(id string) (*Info, error) {
 	path := fmt.Sprintf("RuneInfoById/%v", id)
-	var out RuneInfo
+	var out Info
 	err := c.doRequest(http.MethodGet, path, nil, &out)
 	return &out, err
 }
 
-func (c *RunesApi) doRequest(method string, path string, params map[string]any, out any) (err error) {
+func (c *Api) doRequest(method string, path string, params map[string]any, out any) (err error) {
 	defer base.CatchPanicAndMapToBasicError(&err)
 
 	url := c.Url + strings.TrimPrefix(path, "/")

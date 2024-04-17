@@ -1,4 +1,4 @@
-package btc
+package rune
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestnetApi() *RunesApi {
+func TestnetApi() *Api {
 	return NewRunesApi(UrlTestnet)
 }
 

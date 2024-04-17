@@ -1,4 +1,4 @@
-package btc
+package rune
 
 import (
 	"math/big"
@@ -9,7 +9,7 @@ import (
 
 // MARK - Balance
 
-type RuneBalance struct {
+type Balance struct {
 	Address        string `json:"addr"`
 	Balance        int64  `json:"balance"`
 	Divisibility   int16  `json:"divisibility"` // decimal
@@ -18,13 +18,13 @@ type RuneBalance struct {
 	Symbol         string `json:"symbol"`
 }
 
-func (b *RuneBalance) BalanceWithDecimal() string {
+func (b *Balance) BalanceWithDecimal() string {
 	pow := big.NewInt(0).Exp(big.NewInt(10), big.NewInt(int64(b.Divisibility)), nil)
 	bal := big.NewFloat(0).Quo(big.NewFloat(float64(b.Balance)), big.NewFloat(0).SetInt(pow))
 	return bal.String()
 }
 
-func (b *RuneBalance) JsonString() string {
+func (b *Balance) JsonString() string {
 	j, err := base.JsonString(b)
 	if err != nil {
 		return ""
@@ -32,13 +32,13 @@ func (b *RuneBalance) JsonString() string {
 	return j.Value
 }
 
-type RuneBalanceArray struct {
-	inter.AnyArray[*RuneBalance]
+type BalanceArray struct {
+	inter.AnyArray[*Balance]
 }
 
 // MARK - Info
 
-type RuneInfo struct {
+type Info struct {
 	RuneId       string  `json:"rune_id"`
 	Block        int64   `json:"block"`
 	Burned       int64   `json:"burned"`
@@ -54,7 +54,7 @@ type RuneInfo struct {
 	//  Terms string`json:"terms"`
 }
 
-func (i *RuneInfo) JsonString() string {
+func (i *Info) JsonString() string {
 	j, err := base.JsonString(i)
 	if err != nil {
 		return ""
