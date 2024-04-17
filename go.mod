@@ -1,4 +1,4 @@
-module github.com/Zhangguiguang/go-runes
+module github.com/coming-chat/go-runes-api
 
 go 1.21.5
 
