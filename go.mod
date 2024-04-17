@@ -1,4 +1,4 @@
-module runes
+module github.com/Zhangguiguang/go-runes
 
 go 1.21.5
 
