@@ -1,6 +1,6 @@
 module github.com/coming-chat/go-runes-api
 
-go 1.21.5
+go 1.21
 
 require (
 	github.com/coming-chat/wallet-SDK v0.2.7-0.20240416095448-e22d52c2a160
