@@ -9,6 +9,7 @@ import (
 
 // MARK - Balance
 
+// rune balance
 type Balance struct {
 	Address        string `json:"addr"`
 	Balance        int64  `json:"balance"`
@@ -38,6 +39,7 @@ type BalanceArray struct {
 
 // MARK - Info
 
+// rune info
 type Info struct {
 	RuneId       string  `json:"rune_id"`
 	Block        int64   `json:"block"`

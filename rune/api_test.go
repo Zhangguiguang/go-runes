@@ -7,7 +7,19 @@ import (
 )
 
 func TestnetApi() *Api {
-	return NewRunesApi(UrlTestnet)
+	return NewApi(UrlTestnet)
+}
+
+func TestTransferRunes(t *testing.T) {
+	api := TestnetApi()
+
+	sender := "tb1p37zl29ltg5x0nsmd8lf2m5fzrjealrrektcng03ztvmlcf3ejdqsh4tfht"
+	receiver := "tb1p37zl29ltg5x0nsmd8lf2m5fzrjealrrektcng03ztvmlcf3ejdqsh4tfht"
+	rune := "RUNE•TO•MOON"
+	amount := "0.1"
+	txn, err := api.TransferRunes(sender, receiver, rune, amount, 1.0, 500)
+	require.NoError(t, err)
+	t.Log(txn.JsonString())
 }
 
 func TestRuneBalance(t *testing.T) {
@@ -15,7 +27,7 @@ func TestRuneBalance(t *testing.T) {
 
 	owner := "tb1p37zl29ltg5x0nsmd8lf2m5fzrjealrrektcng03ztvmlcf3ejdqsh4tfht"
 	rune := "RUNE•TO•MOON"
-	res, err := api.RunesBalance(owner, rune)
+	res, err := api.RuneBalance(owner, rune)
 	require.NoError(t, err)
 	t.Log(res)
 	t.Log(res.BalanceWithDecimal())
@@ -25,7 +37,7 @@ func TestRuneBalances(t *testing.T) {
 	api := TestnetApi()
 
 	owner := "tb1p37zl29ltg5x0nsmd8lf2m5fzrjealrrektcng03ztvmlcf3ejdqsh4tfht"
-	res, err := api.RunesBalances(owner)
+	res, err := api.RuneBalances(owner)
 	require.NoError(t, err)
 	t.Log(res.JsonString())
 }

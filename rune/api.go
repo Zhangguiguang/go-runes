@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/coming-chat/wallet-SDK/core/base"
@@ -19,31 +20,49 @@ type Api struct {
 	Url string
 }
 
-func NewRunesApi(url string) *Api {
+func NewApi(url string) *Api {
 	if !strings.HasSuffix(url, "/") {
 		url = url + "/"
 	}
 	return &Api{Url: url}
 }
 
-func (c *Api) TransferRunes() (*base.OptionalString, error) {
-	return base.NewOptionalString(""), nil
+// 构建 rune 转账交易
+func (c *Api) TransferRunes(sender, receiver string, runeName, amount string, feeRate float64, postage int) (*TransferTransaction, error) {
+	path := "TransferRunes"
+	params := map[string]any{
+		"commit_fee_rate": strconv.FormatFloat(feeRate, 'f', -1, 64),
+		"source":          sender,
+		"receive_infos": []map[string]string{
+			{
+				"destination": receiver,
+				"rune":        runeName,
+				"amount":      amount,
+			}},
+		"postage": postage,
+	}
+	var out TransferTransaction
+	err := c.doRequest(http.MethodPost, path, params, &out)
+	return &out, err
 }
 
-func (c *Api) RunesBalance(owner, rune string) (*Balance, error) {
-	path := fmt.Sprintf("RuneBalance/%v/%v", owner, rune)
+// 查询一个地址下某个 rune 的 balance
+func (c *Api) RuneBalance(owner, runeName string) (*Balance, error) {
+	path := fmt.Sprintf("RuneBalance/%v/%v", owner, runeName)
 	var out Balance
 	err := c.doRequest(http.MethodGet, path, nil, &out)
 	return &out, err
 }
 
-func (c *Api) RunesBalances(owner string) (*BalanceArray, error) {
+// 查询一个地址下所有的 rune balance
+func (c *Api) RuneBalances(owner string) (*BalanceArray, error) {
 	path := fmt.Sprintf("RuneBalances/%v", owner)
 	var out BalanceArray
 	err := c.doRequest(http.MethodGet, path, nil, &out)
 	return &out, err
 }
 
+// 使用 rune 名称查询 rune 信息
 func (c *Api) RuneInfo(name string) (*Info, error) {
 	path := fmt.Sprintf("RuneInfo/%v", name)
 	var out Info
@@ -51,6 +70,7 @@ func (c *Api) RuneInfo(name string) (*Info, error) {
 	return &out, err
 }
 
+// 使用 rune id 查询 rune 信息
 func (c *Api) RuneInfoById(id string) (*Info, error) {
 	path := fmt.Sprintf("RuneInfoById/%v", id)
 	var out Info
