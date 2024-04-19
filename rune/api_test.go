@@ -17,7 +17,7 @@ func TestTransferRunes(t *testing.T) {
 	receiver := "tb1p37zl29ltg5x0nsmd8lf2m5fzrjealrrektcng03ztvmlcf3ejdqsh4tfht"
 	rune := "RUNE•TO•MOON"
 	amount := "0.1"
-	txn, err := api.TransferRunes(sender, receiver, rune, amount, 1.0, 500)
+	txn, err := api.TransferRunes(sender, receiver, rune, amount, 1.0, 0)
 	require.NoError(t, err)
 	t.Log(txn.JsonString())
 }

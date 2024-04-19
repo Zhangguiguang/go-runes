@@ -28,8 +28,12 @@ func NewApi(url string) *Api {
 }
 
 // 构建 rune 转账交易
+// @param postage: the rune utxo's satoshi value, default is 546
 func (c *Api) TransferRunes(sender, receiver string, runeName, amount string, feeRate float64, postage int) (*TransferTransaction, error) {
 	path := "TransferRunes"
+	if postage <= 0 {
+		postage = 546
+	}
 	params := map[string]any{
 		"commit_fee_rate": strconv.FormatFloat(feeRate, 'f', -1, 64),
 		"source":          sender,
