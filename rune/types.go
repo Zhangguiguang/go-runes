@@ -1,6 +1,7 @@
 package rune
 
 import (
+	"encoding/json"
 	"math/big"
 
 	"github.com/coming-chat/wallet-SDK/core/base"
@@ -12,16 +13,42 @@ import (
 // rune balance
 type Balance struct {
 	Address        string `json:"addr"`
-	Balance        int64  `json:"balance"`
+	Balance        string `json:"balance"`
 	Divisibility   int16  `json:"divisibility"` // decimal
 	HasInscription bool   `json:"has_inscription"`
 	Rune           string `json:"rune"`
 	Symbol         string `json:"symbol"`
 }
 
+func (b *Balance) UnmarshalJSON(data []byte) error {
+	var raw struct {
+		Address        string   `json:"addr"`
+		Balance        *big.Int `json:"balance"` // only balance need use big int
+		Divisibility   int16    `json:"divisibility"`
+		HasInscription bool     `json:"has_inscription"`
+		Rune           string   `json:"rune"`
+		Symbol         string   `json:"symbol"`
+	}
+	err := json.Unmarshal(data, &raw)
+	if err != nil {
+		return err
+	}
+	b.Address = raw.Address
+	b.Balance = raw.Balance.String()
+	b.Divisibility = raw.Divisibility
+	b.HasInscription = raw.HasInscription
+	b.Rune = raw.Rune
+	b.Symbol = raw.Symbol
+	return nil
+}
+
 func (b *Balance) BalanceWithDecimal() string {
+	balFloat, ok := big.NewFloat(0).SetString(b.Balance)
+	if !ok {
+		return "0"
+	}
 	pow := big.NewInt(0).Exp(big.NewInt(10), big.NewInt(int64(b.Divisibility)), nil)
-	bal := big.NewFloat(0).Quo(big.NewFloat(float64(b.Balance)), big.NewFloat(0).SetInt(pow))
+	bal := big.NewFloat(0).Quo(balFloat, big.NewFloat(0).SetInt(pow))
 	return bal.String()
 }
 
